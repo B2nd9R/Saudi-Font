@@ -64,16 +64,26 @@ document.addEventListener('DOMContentLoaded', function() {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             
-            // تعيين أبعاد الـ canvas
+            // معامل التكبير لزيادة الدقة (يمكن زيادته للحصول على صورة أكثر وضوحًا)
+            const scaleFactor = 2;
+            
+            // تعيين أبعاد الـ canvas مع معامل التكبير
             const padding = 40;  // هامش حول النص
             const containerWidth = outputContainer.offsetWidth - (padding * 2);
             const containerHeight = Math.max(outputContainer.offsetHeight, 200) - (padding * 2);
-            canvas.width = containerWidth + (padding * 2);
-            canvas.height = containerHeight + (padding * 2);
+            canvas.width = (containerWidth + (padding * 2)) * scaleFactor;
+            canvas.height = (containerHeight + (padding * 2)) * scaleFactor;
+            
+            // تطبيق معامل التكبير على السياق
+            ctx.scale(scaleFactor, scaleFactor);
+            
+            // تحسين جودة الرسم
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
             
             // رسم الخلفية
             ctx.fillStyle = bgColorPicker.value;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillRect(0, 0, canvas.width / scaleFactor, canvas.height / scaleFactor);
             
             // الحصول على الخط الحالي
             const currentFont = fontStyleSelect.value;
@@ -86,21 +96,22 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.textAlign = textAlignSelect.value;
             ctx.direction = 'rtl';
             ctx.textBaseline = 'top';
+            ctx.textRendering = 'optimizeLegibility'; // تحسين قراءة النص
             
             // تحديد نقطة البداية للنص بناءً على المحاذاة
             let xPosition;
             switch (textAlignSelect.value) {
                 case 'right':
-                    xPosition = canvas.width - padding;
+                    xPosition = (canvas.width / scaleFactor) - padding;
                     break;
                 case 'center':
-                    xPosition = canvas.width / 2;
+                    xPosition = (canvas.width / scaleFactor) / 2;
                     break;
                 case 'left':
                     xPosition = padding;
                     break;
                 default:
-                    xPosition = canvas.width - padding;
+                    xPosition = (canvas.width / scaleFactor) - padding;
             }
             
             // تقسيم النص إلى أسطر
@@ -109,10 +120,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const words = text.split(' ');
             let line = '';
             let yPos = padding;
-            
-            // تتبع حالة الدمج
-            console.log(`Drawing text with color: ${textColor}`);
-            console.log(`Font set to: ${ctx.font}`);
             
             // رسم النص سطراً بسطر
             for (let i = 0; i < words.length; i++) {
@@ -129,9 +136,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             ctx.fillText(line, xPosition, yPos);
             
-            // تحويل الـ canvas إلى URL للتنزيل
+            // تحويل الـ canvas إلى URL للتنزيل - تحسين جودة التصدير
             try {
-                const dataUrl = canvas.toDataURL('image/png');
+                // استخدام جودة أعلى للصورة (1.0 تعني أعلى جودة)
+                const dataUrl = canvas.toDataURL('image/png', 1.0);
                 const downloadLink = document.createElement('a');
                 downloadLink.href = dataUrl;
                 downloadLink.download = 'saudi-font-text.png';
@@ -145,19 +153,27 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // حل بديل لتنزيل النص كصورة باستخدام html2canvas
+    // تحسين دالة downloadUsingHtml2Canvas أيضًا إذا كنت تستخدمها كحل بديل
     function downloadUsingHtml2Canvas() {
         if (!textInput.value.trim()) {
             alert("الرجاء إدخال نص قبل التنزيل");
             return;
         }
         
-        // حفظ الإعدادات الحالية لاستخدامها في التنزيل
         const html2canvasScript = document.createElement('script');
         html2canvasScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
         html2canvasScript.onload = function() {
-            html2canvas(outputContainer).then(canvas => {
-                const dataUrl = canvas.toDataURL('image/png');
+            // تحسين خيارات html2canvas للحصول على جودة أعلى
+            const options = {
+                scale: 2, // معامل تكبير لزيادة الدقة
+                useCORS: true, // للسماح بتحميل الموارد من مصادر مختلفة
+                allowTaint: true,
+                backgroundColor: bgColorPicker.value,
+                logging: false
+            };
+            
+            html2canvas(outputContainer, options).then(canvas => {
+                const dataUrl = canvas.toDataURL('image/png', 1.0);
                 const downloadLink = document.createElement('a');
                 downloadLink.href = dataUrl;
                 downloadLink.download = 'saudi-font-text.png';
