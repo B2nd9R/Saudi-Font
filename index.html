@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تجربة الخط السعودي</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>تجربة الخط السعودي</h1>
+            </div>
+        </header>
+        
+        <main>
+            <div class="input-section">
+                <label for="textInput">أدخل النص هنا:</label>
+                <textarea id="textInput" placeholder="اكتب هنا لترى النص بالخط السعودي..."></textarea>
+            </div>
+            
+            <div class="output-section">
+                <div class="output-header">
+                    <h2>معاينة الخط السعودي</h2>
+                    <button id="downloadBtn" class="download-btn">تنزيل كصورة</button>
+                </div>
+                <div id="outputContainer" class="output-container">
+                    <div id="outputText" class="saudi-font"></div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label for="fontStyle">نوع الخط:</label>
+                    <select id="fontStyle">
+                        <option value="Saudi-Regular">عادي (Regular)</option>
+                        <option value="Saudi-Medium">متوسط (Medium)</option>
+                        <option value="Saudi-SemiBold">شبه ثقيل (SemiBold)</option>
+                        <option value="Saudi-Bold">ثقيل (Bold)</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="fontSize">حجم الخط:</label>
+                    <input type="range" id="fontSize" min="12" max="72" value="24">
+                    <span id="fontSizeValue">24px</span>
+                </div>
+                
+                <div class="control-group">
+                    <label for="textColor">لون النص:</label>
+                    <input type="color" id="textColor" value="#006c35">
+                </div>
+                
+                <div class="control-group">
+                    <label for="bgColor">لون الخلفية:</label>
+                    <input type="color" id="bgColor" value="#ffffff">
+                </div>
+                
+                <div class="control-group">
+                    <label for="textAlign">محاذاة النص:</label>
+                    <select id="textAlign">
+                        <option value="right">يمين</option>
+                        <option value="center">وسط</option>
+                        <option value="left">يسار</option>
+                    </select>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            طُوّر بواسطة 
+            <a href="https://showcase-website-rvzo.onrender.com/" target="_blank" rel="noopener">بندر</a>
+            © 2025
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
